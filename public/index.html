@@ -1,0 +1,221 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encurtador de URLs</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+      background: #f5f5f5;
+      color: #333;
+    }
+    h1 {
+      color: #0d4f3c;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+    }
+    .form-container {
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #555;
+    }
+    input[type="url"],
+    input[type="text"],
+    input[type="datetime-local"] {
+      width: 100%;
+      font-size: 16px;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 4px;
+      transition: border-color 0.3s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #0d4f3c;
+    }
+    .input-group {
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      background: #0d4f3c;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 12px 24px;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #0a3d2e;
+    }
+    button:active {
+      transform: translateY(1px);
+    }
+    .resultado {
+      margin-top: 20px;
+      padding: 15px;
+      background: #eef6f3;
+      border-left: 4px solid #1a8870;
+      border-radius: 4px;
+      display: none;
+    }
+    .resultado.show {
+      display: block;
+    }
+    .resultado a {
+      color: #0d4f3c;
+      font-weight: 600;
+      word-break: break-all;
+    }
+    .erro {
+      background: #fee;
+      border-left-color: #c33;
+      color: #c33;
+    }
+    h2 {
+      color: #0d4f3c;
+      margin-top: 40px;
+      margin-bottom: 15px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    th {
+      background: #0d4f3c;
+      color: white;
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
+    tbody tr:hover {
+      background: #f9f9f9;
+    }
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .codigo-link {
+      color: #0d4f3c;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .codigo-link:hover {
+      text-decoration: underline;
+    }
+    .stats-link {
+      color: #666;
+      text-decoration: none;
+      font-size: 12px;
+      margin-left: 10px;
+    }
+    .stats-link:hover {
+      color: #0d4f3c;
+    }
+    .url-original {
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .expired {
+      color: #c33;
+      font-weight: bold;
+    }
+    .optional-fields {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 4px;
+      margin-top: 15px;
+    }
+    .optional-fields h3 {
+      margin-top: 0;
+      font-size: 14px;
+      color: #666;
+      text-transform: uppercase;
+    }
+    @media (max-width: 600px) {
+      .url-original {
+        max-width: 150px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>■ Encurtador de URLs</h1>
+  <p class="subtitle">Transforme URLs longas em links curtos e compartilháveis</p>
+
+  <div class="form-container">
+    <div class="form-group">
+      <label for="url">URL para encurtar</label>
+      <input id="url" type="url" placeholder="https://exemplo.com/pagina-muito-longa">
+    </div>
+
+    <div class="optional-fields">
+      <h3>Opções Avançadas (opcional)</h3>
+      
+      <div class="form-group">
+        <label for="codigo">Código personalizado (4-10 caracteres)</label>
+        <input id="codigo" type="text" placeholder="meulink" maxlength="10">
+      </div>
+
+      <div class="form-group">
+        <label for="expiraEm">Data de expiração</label>
+        <input id="expiraEm" type="datetime-local">
+      </div>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <button id="btn">Encurtar URL</button>
+    </div>
+
+    <div id="resultado" class="resultado"></div>
+  </div>
+
+  <h2>URLs cadastradas</h2>
+  <table id="tabela">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>URL Original</th>
+        <th>Acessos</th>
+        <th>Expira em</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script src="app.js"></script>
+</body>
+</html>
