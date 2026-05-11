@@ -1,0 +1,22 @@
+{
+  "name": "encurtador-urls",
+  "version": "1.0.0",
+  "description": "Encurtador de URLs construído com Bun e TypeScript",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --hot index.ts",
+    "start": "bun index.ts",
+    "test": "bun test"
+  },
+  "keywords": [
+    "url-shortener",
+    "bun",
+    "typescript",
+    "sqlite"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}
